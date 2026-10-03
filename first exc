@@ -1,0 +1,43 @@
+import pandas as pd
+import numpy as np
+
+def clean_sales_data(file_path):
+    """
+    Automated pipeline to clean messy raw sales/transaction data.
+    Handles missing values, standardizes text casing, and formats data types.
+    """
+    print("--- [INFO] Starting Data Cleaning Pipeline ---")
+    
+    # 1. Mocking raw data simulation (Normally loaded from df = pd.read_csv/excel)
+    raw_data = {
+        'Transaction_ID': [101, 102, 103, 104, 105],
+        'Customer_Name': ['  budi santoso', 'SITI AMINAH ', 'joko', 'Rina', None],
+        'Product': ['Laptop', ' Smartphone ', 'tablet', 'LAPTOP', 'Smartwatch'],
+        'Amount': [12000000, np.nan, 3000000, 12000000, 2500000],
+        'Status': ['Completed', 'Pending', 'completed', 'Failed', 'Completed']
+    }
+    
+    df = pd.DataFrame(raw_data)
+    print("\n[RAW DATA PREVIEW]:")
+    print(df)
+    
+    # 2. Handle Missing Values (Impute or Drop)
+    # Fill missing customer names with 'Unknown' and missing amounts with median
+    df['Customer_Name'] = df['Customer_Name'].fillna('Unknown')
+    df['Amount'] = df['Amount'].fillna(df['Amount'].median())
+    
+    # 3. Standardize Text Formatting (Strip whitespace & convert to Title Case)
+    df['Customer_Name'] = df['Customer_Name'].str.strip().str.title()
+    df['Product'] = df['Product'].str.strip().str.title()
+    df['Status'] = df['Status'].str.capitalize()
+    
+    # 4. Remove Duplicate Rows if any
+    df = df.drop_duplicates()
+    
+    print("\n--- [SUCCESS] Data Cleaned & Normalized ---")
+    print(df)
+    return df
+
+# Run the pipeline
+if __name__ == "__main__":
+    cleaned_df = clean_sales_data("dummy_path")
